@@ -49,6 +49,7 @@ app.post("/api/contact", (req, res) => {
   smtpTransport.sendMail(mailOptions, (error, response) => {
     if (error) {
       res.send("message not sent");
+      console.log(data)
     } else {
       res.send("success");
     }
