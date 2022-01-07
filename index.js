@@ -2,9 +2,9 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import nodemailer from "nodemailer";
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 
-dotenv.config()
+dotenv.config();
 // app config
 const app = express();
 const port = process.env.PORT || 3001;
@@ -16,15 +16,15 @@ app.use(express.json());
 app.use(cors());
 
 // api rooutes
-app.get("/", (req,res) => {
+app.get("/", (req, res) => {
   res.send("welcome to my server");
 });
 app.post("/api/contact", (req, res) => {
   let data = req.body;
-  console.log(data)
+  console.log(data);
   let smtpTransport = nodemailer.createTransport({
     service: "Gmail",
-    port: 465,
+    port: 587,
     auth: {
       user: "ekwealorhillary@gmail.com",
       pass: `${process.env.MY_PASSWORD}`,
