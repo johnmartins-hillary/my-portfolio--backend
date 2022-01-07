@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(cors());
 
 // api rooutes
-app.get("/", () => {
+app.get("/", (req,res) => {
   res.send("welcome to my server");
 });
 app.post("/api/contact", (req, res) => {
