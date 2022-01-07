@@ -3,6 +3,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import mailGun from "nodemailer-mailgun-transport"
 
 dotenv.config();
 // app config
@@ -11,7 +12,7 @@ const port = process.env.PORT || 3001;
 
 // middlewares
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
 
@@ -22,14 +23,15 @@ app.get("/", (req, res) => {
 app.post("/api/contact", (req, res) => {
   let data = req.body;
   console.log(data);
-  let smtpTransport = nodemailer.createTransport({
-    service: "Gmail",
-    port: 587,
-    auth: {
-      user: "ekwealorhillary@gmail.com",
-      pass: `${process.env.MY_PASSWORD}`,
-    },
-  });
+
+let auth = {
+  auth: {
+    api_key: "a4c388f5588625d9a60f927e59308ed8-0be3b63b-4cf67f2b",
+    domain: "sandbox440d383033d24d1cac1968a4acc84454.mailgun.org",
+  },
+};
+
+  let transporter = nodemailer.createTransport(mailGun(auth));
   let mailOptions = {
     from: data.email,
     to: "ekwealorhillary@gmail.com",
@@ -46,7 +48,7 @@ app.post("/api/contact", (req, res) => {
       <p>${data.message}</p>`,
   };
 
-  smtpTransport.sendMail(mailOptions, (error, response) => {
+  transporter.sendMail(mailOptions, (error, response) => {
     if (error) {
       res.send("message not sent");
       console.log(data)
@@ -54,7 +56,7 @@ app.post("/api/contact", (req, res) => {
       res.send("success");
     }
   });
-  smtpTransport.close();
+  transporter.close();
 });
 
 // listen
